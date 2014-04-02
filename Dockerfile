@@ -64,7 +64,6 @@ RUN dpkg -i riak_2.0.0pre20-riak_json-0.0.3-1_amd64.deb
 RUN sed -i -e 0,/"enabled, false"/{s/"enabled, false"/"enabled, true"/} /etc/riak/riak.conf
 RUN sed -i.bak 's/search = off/search = on/' /etc/riak/riak.conf
 RUN sed -i.bak 's/127.0.0.1/0.0.0.0/' /etc/riak/riak.conf
-RUN echo "ulimit -n 9000" >> /etc/default/riak
 
 
 ADD ./etc/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
@@ -93,6 +92,8 @@ RUN echo " *               soft     nofile          65536" >> /etc/security/limi
 RUN echo " *               hard     nofile          65536" >> /etc/security/limits.conf
 RUN echo " root            soft     nofile          65536" >> /etc/security/limits.conf
 RUN echo " root            hard     nofile          65536" >> /etc/security/limits.conf
+RUN echo "session    required   pam_limits.so" >> /etc/pam.d/common-session
+RUN echo "session    required   pam_limits.so" >> /etc/pam.d/common-session-noninteractive
 
 
 
