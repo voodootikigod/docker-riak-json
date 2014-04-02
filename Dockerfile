@@ -5,7 +5,7 @@
 
 # Use the Ubuntu base image with LTS
 FROM ubuntu:12.04
-MAINTAINER Chris Williams chris@nodesource.com
+MAINTAINER Chris Williams voodootikigod@gmail.com
 
 
 
