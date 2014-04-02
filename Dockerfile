@@ -12,10 +12,10 @@ MAINTAINER Chris Williams voodootikigod@gmail.com
 # Update the APT cache
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
 RUN apt-get update
-RUN apt-get upgrade -y
+# RUN DEBIAN_FRONTEND=noninteractive apt-get upgrade -qqy
 
 # Install and setup project dependencies
-RUN apt-get install -y curl lsb-release supervisor openssl-dev openssh-server  build-essential
+RUN apt-get install -qqy curl lsb-release supervisor libssl-dev openssh-server  build-essential
 
 RUN mkdir -p /var/run/sshd
 RUN mkdir -p /var/log/supervisor
@@ -39,6 +39,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install oracle-java7-installer -y
 
 # Install Erlangs
 
+RUN apt-get install -qqy libwxbase2.8-0
+RUN apt-get install -qqy libwxgtk2.8-0
+
+RUN apt-get install -qqy logrotate
 RUN wget http://packages.erlang-solutions.com/erlang/esl-erlang/FLAVOUR_1_general/esl-erlang_16.b.3-1~ubuntu~precise_amd64.deb
 RUN dpkg -i esl-erlang_16.b.3-1~ubuntu~precise_amd64.deb
 RUN apt-get install -qqy libpam0g-dev
@@ -57,9 +61,9 @@ RUN dpkg -i riak_2.0.0pre20-riak_json-0.0.3-1_amd64.deb
 
 
 
-RUN sed -i -e 0,/"enabled, false"/{s/"enabled, false"/"enabled, true"/} /etc/riak/app.config
+RUN sed -i -e 0,/"enabled, false"/{s/"enabled, false"/"enabled, true"/} /etc/riak/riak.conf
 RUN sed -i.bak 's/search = off/search = on/' /etc/riak/riak.conf
-RUN sed -i.bak 's/127.0.0.1/0.0.0.0/' /etc/riak/app.config
+RUN sed -i.bak 's/127.0.0.1/0.0.0.0/' /etc/riak/riak.conf
 RUN echo "ulimit -n 4096" >> /etc/default/riak
 
 
@@ -78,6 +82,7 @@ RUN apt-get install -qqy iputils-ping
 # Hack for initctl
 # See: https://github.com/dotcloud/docker/issues/1024
 RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN mv /sbin/initctl /sbin/initctl.bk
 RUN ln -s /bin/true /sbin/initctl
 
 
