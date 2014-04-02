@@ -89,6 +89,11 @@ RUN ln -s /bin/true /sbin/initctl
 # Expose Riak Protocol Buffers and HTTP interfaces, along with SSH
 EXPOSE 8087 8098 22
 
+RUN echo " *               soft     nofile          65536" >> /etc/security/limits.conf
+RUN echo " *               hard     nofile          65536" >> /etc/security/limits.conf
+RUN echo " root            soft     nofile          65536" >> /etc/security/limits.conf
+RUN echo " root            hard     nofile          65536" >> /etc/security/limits.conf
+
 
 
 CMD ["/usr/bin/supervisord"]
